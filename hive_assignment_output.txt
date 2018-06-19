@@ -1,0 +1,86 @@
+1.  
+hive> select count(distinct event_id) from windows_log_update;
+19
+
+2.  hive> select source, count(*) as num_events from windows_log_update group by source;
+AU	3424
+Agent	5456
+DnldMgr	4288
+Driver	156
+DtaStor	918
+Handler	2166
+Misc	2270
+PT	232
+Report	1598
+Service	264
+Setup	646
+Shutdwn	8232
+{DF5DBC4A-03BC-42B7-8595-1734615D523B}	2
+
+                                                                                
+
+3.hive> select substring(log_date,1,10) as log_date_without_timestamp, count(*) as num_events from windows_log_update group by substring(log_date,1,10);
+
+2014-03-07	1664
+2014-03-08	2538
+2014-03-09	348
+2014-03-10	280
+2014-03-11	5646
+2014-03-12	568
+2014-03-13	454
+2014-03-14	500
+2014-03-16	548
+2014-03-17	484
+2014-03-18	338
+2014-03-19	696
+2014-03-20	494
+2014-03-21	362
+2014-03-27	494
+2014-03-28	492
+2014-03-29	358
+2014-03-30	340
+2014-03-31	286
+2014-04-01	486
+2014-04-02	340
+2014-04-03	284
+2014-04-04	496
+2014-04-06	342
+2014-04-07	294
+2014-04-08	494
+2014-04-09	1500
+2014-04-10	8130
+2014-04-11	394
+2014-03-07	2
+
+4.  hive> select count(*) from windows_log_update where source = 'DnldMgr'; 
+4288
+5. hive> select count(*) from windows_log_update where message like concat('%', 'Download', '%') and message like concat('%', 'succeeded', '%');
+108
+6. select log_date, log_time from windows_log_update where message like concat('%', 'Download', '%') and message like concat('%', 'succeeded', '%') and  substring(log_date,1,10) = '2014-03-11';
+2014-03-11	12:13:02:992
+2014-03-11	12:13:03:382
+2014-03-11	12:13:08:540
+2014-03-11	12:13:23:795
+2014-03-11	12:13:23:827
+2014-03-11	12:13:34:790
+2014-03-11	12:13:39:825
+2014-03-11	12:13:40:130
+2014-03-11	12:13:52:870
+2014-03-11	12:13:53:428
+2014-03-11	12:13:53:872
+2014-03-11	12:13:54:195
+2014-03-11	12:13:02:992
+2014-03-11	12:13:03:382
+2014-03-11	12:13:08:540
+2014-03-11	12:13:23:795
+2014-03-11	12:13:23:827
+2014-03-11	12:13:34:790
+2014-03-11	12:13:39:825
+2014-03-11	12:13:40:130
+2014-03-11	12:13:52:870
+2014-03-11	12:13:53:428
+2014-03-11	12:13:53:872
+2014-03-11	12:13:54:195
+7.  hive> select log_date, count(*) as download_succeed from windows_log_update where message like concat('%', 'Download', '%') and message like concat('%', 'succeeded', '%') group by log_date order by download_succeed  desc limit 1;
+2014-03-07	60
+
